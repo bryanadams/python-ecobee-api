@@ -41,6 +41,7 @@ class Ecobee(object):
         self.access_token = None
         self.refresh_token = None
         self.include_notifications = False
+        self.expires_in = 0
 
         if self.config_filename is None and self.config is None:
             _LOGGER.error("No ecobee credentials supplied, unable to continue")
@@ -107,6 +108,7 @@ class Ecobee(object):
         try:
             self.authorization_code = response["code"]
             self.pin = response["ecobeePin"]
+            self.expires_in = response["expires_in"]
             _LOGGER.debug(
                 f"Authorize your ecobee developer app with PIN code {self.pin}. "
                 f"Goto https://www.ecobee/com/consumerportal/index.html, "
@@ -138,6 +140,7 @@ class Ecobee(object):
         try:
             self.access_token = response["access_token"]
             self.refresh_token = response["refresh_token"]
+            self.expires_in = response["expires_in"]
             self._write_config()
             self.pin = None
             _LOGGER.debug(f"Obtained tokens from ecobee: access {self.access_token}, "
@@ -167,6 +170,7 @@ class Ecobee(object):
         try:
             self.access_token = response["access_token"]
             self.refresh_token = response["refresh_token"]
+            self.expires_in = response["expires_in"]
             self._write_config()
             _LOGGER.debug(f"Refreshed tokens from ecobee: access {self.access_token}, "
                           f"refresh {self.refresh_token}")
